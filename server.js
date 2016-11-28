@@ -77,11 +77,11 @@ io.on('connection', function(socket){
 
 
 
-// io.on('disconnect', function(socket){
-// 	console.log("disconnect" + socket['id']);
-// 	delete(listofsquares[socket['id']]);
+io.on('disconnect', function(){ // don't do function(socket)
+	console.log("disconnect" + socket['id']);
+	delete(listofsquares[socket['id']]);
 
-// });
+});
 
 
 
