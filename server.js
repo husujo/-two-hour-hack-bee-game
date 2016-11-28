@@ -66,7 +66,7 @@ io.on('connection', function(socket){
 
     });
 
-    socket.on('disconnect', function(socket){
+    socket.on('disconnect', function(){
       	console.log("disconnect: " + socket['id']);
 	      delete(listofsquares[socket['id']]);
       
@@ -76,12 +76,6 @@ io.on('connection', function(socket){
 });
 
 
-
-io.on('disconnect', function(){ // don't do function(socket)
-	console.log("disconnect" + socket['id']);
-	delete(listofsquares[socket['id']]);
-
-});
 
 
 
