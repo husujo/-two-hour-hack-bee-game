@@ -68,23 +68,12 @@ io.on('connection', function(socket){
     });
 
     socket.on('disconnect', function(){
-        // console.log(socket);
       	console.log("disconnect: " + socket['id']);
 	      delete(beelist[socket['id']]);
 	     // console.log(beelist[socket['id']]);
     });
 
 });
-
-
-
-io.on('disconnect', function(socket){
-	console.log("disconnect" + socket['id']);
-	delete(beelist[socket['id']]);
-	
-
-});
-
 
 
 
