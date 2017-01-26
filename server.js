@@ -45,7 +45,8 @@ app.get('/', function(req, res){
 
 
 
-var listofsquares = {};
+var beelist = {};
+var tornado = [200,200];
 
 io.on('connection', function(socket){
 	console.log("connection!" + socket['id']);
@@ -56,32 +57,33 @@ io.on('connection', function(socket){
 	// 	console.log(x);
 	// });
 
-    socket.on('give a square', function(x,y){
+    socket.on('update', function(x,y){
     	// console.log(x + "   " + y);
-    	listofsquares[socket['id']] = [x,y];
-    	// console.log(listofsquares[socket['id']]);
+    	beelist[socket['id']] = [x,y];
+    	// console.log(beelist[socket['id']]);
     	//io.emit('chat message', msg);
-    	socket.emit('listofsquares', listofsquares);
-    	// broadcast('listofsquares',listofsquares);
+    	socket.emit('entities', {beelist: beelist, tornado: tornado});
+    	// broadcast('beelist',beelist);
 
     });
 
-    socket.on('disconnect', function(socket){
+    socket.on('disconnect', function(){
+        // console.log(socket);
       	console.log("disconnect: " + socket['id']);
-	      delete(listofsquares[socket['id']]);
-      
+	      delete(beelist[socket['id']]);
+	     // console.log(beelist[socket['id']]);
     });
-
 
 });
 
 
 
-// io.on('disconnect', function(socket){
-// 	console.log("disconnect" + socket['id']);
-// 	delete(listofsquares[socket['id']]);
+io.on('disconnect', function(socket){
+	console.log("disconnect" + socket['id']);
+	delete(beelist[socket['id']]);
+	
 
-// });
+});
 
 
 

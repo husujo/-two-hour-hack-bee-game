@@ -5,11 +5,15 @@ var player;
 var mousex;
 var mousey;
 
+var tornado_x;
+var tornado_y;
+
 var base_image;
+var tornado_image;
 
 var socket = io();
 
-socket.on('listofsquares', function(list) {
+socket.on('entities', function(entities) {
 
 	var ctx = myGameArea.context;
 	
@@ -18,15 +22,21 @@ socket.on('listofsquares', function(list) {
 	// });
 	
 	myGameArea.clear();
+	
+	// console.log(entities.tornado);
 
-	var x;
-	for (x in list){
+	for (var x in entities.beelist){
 		// ctx.fillRect(list[x][0], list[x][1], 10, 10);
-		ctx.drawImage(base_image, list[x][0], list[x][1], 30,30);
+		ctx.drawImage(base_image, entities.beelist[x][0], entities.beelist[x][1], 30,30);
 	}
+	// ctx.drawImage(tornado_image,200,200,40,40);
+
+	ctx.drawImage(tornado_image,entities.tornado[0],entities.tornado[1],40,40);
 	ctx.font = "48px serif";
 	ctx.fillText("click to fly", 100,50,500);
 
+	tornado_x = entities.tornado[0];
+	tornado_y = entities.tornado[1];
 });
 
 socket.on("disconnect", function(){
@@ -37,6 +47,8 @@ window.onload = function() {
 
 	base_image = new Image();
 	base_image.src = 'https://www.rochester.edu/aboutus/images/Rocky-now.png';
+	tornado_image = new Image();
+	tornado_image.src = 'https://flashdba.files.wordpress.com/2013/10/tornado.png';
 	
 
 	mousex = 10;
@@ -75,8 +87,14 @@ function component(width, height, x, y) {
 		//console.log("player update\n");
 		ctx = myGameArea.context;
 		// ctx.fillStyle = "green";
+
 		var xdist = Math.abs(this.x-mousex);
 		var ydist = Math.abs(this.y-mousey);
+
+
+		if (this.x+15 > tornado_x && this.y+15 > tornado_y && this.x+15 < tornado_x+40 && this.y+15 < tornado_y+40) {
+			return;
+		}
 
 		if (xdist > ydist) {
 			if (mousex > this.x) {this.x += 5};
@@ -116,8 +134,7 @@ function updateGameArea() {
 	// send my squares coords
 	// $.post('/server-init.js', {"x": player.x});
 
-
-	socket.emit('give a square', player.x, player.y);
+	socket.emit('update', player.x, player.y);
 	
 	// get the other players coords
 
@@ -125,8 +142,8 @@ function updateGameArea() {
 
 
 function handleMouseDown(e) {
-	mousex = e.x;
-	mousey = e.y;
+	mousex = e.x-20;
+	mousey = e.y-20;
 	console.log("mouse down on : %d %d\n", mousex,mousey);
 }
 
